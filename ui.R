@@ -19,8 +19,8 @@ ui <- fluidPage(
                           sliderInput('top_rank', 
                                       label = 'Top rank',
                                       min = 0, 
-                                      max = 100, 
-                                      value = 30),
+                                      max = 50, 
+                                      value = 10),
                           selectInput(
                             inputId =  "top_year", 
                             label = "Select year:", 
