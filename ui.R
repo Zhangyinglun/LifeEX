@@ -6,7 +6,10 @@ ui <- fluidPage(
   theme = shinytheme('sandstone'),
   navbarPage('Global Life Expectancy',
              tabPanel("Welcome",
-                      mainPanel(plotOutput('welcome_plot'))
+                      fluidRow(
+                        column(12, align="center",
+                               plotOutput('welcome_plot'))
+                        )
                       ),
              tabPanel("Top Countries",
                       fluidPage(
