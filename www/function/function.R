@@ -22,9 +22,9 @@ getWrodCloudPlot <- function(year){
   a<-data.frame(country = word$geo.name,
                 freq = (word[ , c(year)]^3))
   par(pin = c(5.5,5.5))
-  return(wordcloud(a$country,a$freq,min.freq = 214599,scale=c(1,0.1),colors = a$freq))
+  #return(wordcloud(a$country,a$freq,min.freq = 214599,scale=c(1,0.1),colors = a$freq))
+  return(wordcloud2(a,color = "random-light",size = 0.3))
 }
-
 
 getRankPlot <- function(top_year,top_rank){
   word<-na.omit(df) 
