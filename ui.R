@@ -8,7 +8,7 @@ ui <- fluidPage(
              tabPanel("Welcome",
                       fluidRow(
                         column(12, align="center",
-                               wordcloud2Output('welcome_plot',width = 1500, height = 800))
+                               wordcloud2Output('welcome_plot',width = 1200, height = 550))
                         )
                       ),
              tabPanel("Top Countries",
