@@ -95,6 +95,16 @@ getRelatedDataPlot <- function(related_country,start_date,end_date){
   
   earthquake <- read_csv(file.path(getwd(),"/www/data/earthquake_deaths_annual_number.csv"))
   
+  # replace character into numerics, 10K -- 10000
+  for (i in 2:length(colnames(earthquake))) {
+    if (sapply(earthquake,class)[i] == 'character'){
+      print(colnames(earthquake)[i])
+      earthquake[[colnames(earthquake)[i]]] <- as.numeric(sub('k','e3',earthquake[[colnames(earthquake)[i]]]))
+    }
+  0}
+
+  gdp_c <- gdp[!is.na(gdp[["Country Name"]]),]
+  
   return(relation_gdp(df,related_country))
   
   #print(paste('Running getRelatedDataPlot! start_date=',start_date,'end_date=',end_date,'related_country=',related_country))
