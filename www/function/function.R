@@ -7,15 +7,14 @@ library(dplyr)
 
 library(readr)
 library(stringr)
-df1.path <- file.path("www/data/LifeExpectancy.csv")
-
-df.path <- file.path("www/data/LifeExpectancy.xlsx")
-
-
 library(jiebaRD) 
 library(jiebaR)
 library(wordcloud)
 library(wordcloud2)
+
+df1.path <- file.path("www/data/LifeExpectancy.csv")
+df.path <- file.path("www/data/LifeExpectancy.xlsx")
+
 df <- read.csv(df1.path)
 getWrodCloudPlot <- function(year){
   word<-na.omit(df) 
@@ -38,7 +37,6 @@ getRankPlot <- function(top_year,top_rank){
   p <- ggplot(word2[1:top_rank,],aes(x=co,y=population))
   p+geom_bar(stat = 'identity')+theme(axis.text.x = element_text(angle = 30, hjust = 1))+coord_flip()
 }
-
 
 #position=[Global,Europe,Asia,North America,South America,Africa,Australia]
 getMapPlot <- function(date,position){
@@ -90,66 +88,62 @@ getRelatedDataPlot <- function(related_country,start_date,end_date){
 }
 
 relation_gdp <- function(country) {
-  print(paste(getwd()))
-  df <- read_excel(file.path(getwd(),"www/data/lex-by-gapminder.xlsx"), sheet = 2)
-  df_region <- read_excel(file.path(getwd(),"/www/data/lex-by-gapminder.xlsx"), sheet = 3)
-  df_global <- read_excel(file.path(getwd(),"/www/data/lex-by-gapminder.xlsx"), sheet = 4)
+  # Read raw data
+  df <- read_excel(file.path(getwd(),"www/data/lex-by-gapminder.xlsx"), sheet = 2)  # Expected life of each country since 1800
+  df_region <- read_excel(file.path(getwd(),"/www/data/lex-by-gapminder.xlsx"), sheet = 3)  # Expected life of each region since 1800
+  df_global <- read_excel(file.path(getwd(),"/www/data/lex-by-gapminder.xlsx"), sheet = 4)  # Explected life global since 1800
+  gdp <- read_excel(file.path(getwd(),"/www/data/GM-GDP per capita - Dataset - v27.xlsx"), sheet = 'data-GDP-per-capita-in-columns', skip = 3) # GDP of each country since 1800
+  earthquake <- read_csv(file.path(getwd(),"/www/data/earthquake_deaths_annual_number.csv")) # Earthquake death of each country since 1800
   
-  
-  gdp <- read_excel(file.path(getwd(),"/www/data/GM-GDP per capita - Dataset - v27.xlsx"), sheet = 'data-GDP-per-capita-in-columns', skip = 3) 
-  
-  earthquake <- read_csv(file.path(getwd(),"/www/data/earthquake_deaths_annual_number.csv"))
-  
+  # Data Cleaning
   # replace character into numerics, 10K -- 10000
   for (i in 2:length(colnames(earthquake))) {
     if (sapply(earthquake,class)[i] == 'character'){
-      print(colnames(earthquake)[i])
       earthquake[[colnames(earthquake)[i]]] <- as.numeric(sub('k','e3',earthquake[[colnames(earthquake)[i]]]))
     }
     0}
-  
-  
+  # delete rows with blank country name
   gdp_c <- gdp[!is.na(gdp[["Country Name"]]),]
-  
-  expectancy <- df[df[["geo.name"]] == country,]
+  # connect df and gdp
+  expectancy <- df[df[["geo.name"]] == country,]   # Pick the country
   geo <- expectancy$geo 
-  life <- expectancy[,5:length(expectancy)]
-  life[2,] <- NA
-  
   if (any(grepl(geo, gdp_c$geo))) {
-    g <- gdp_c[gdp_c[['geo']] == geo,]
-    g <- g[,3:length(g)]
-    
-    for (i in 1:length(g)){
-      life[2,as.character(colnames(g)[i])] <- g[,i]
-    }
-    
-    life<- rbind(life, as.numeric(colnames(life)))
-    
-    life <- t(life)
-    colnames(life) <- c('expectlife','gdp','year')
-    
-    df_life <- data.frame(life)
-    
-    scaleFactor <- max(df_life$expectlife) / max(df_life$gdp, na.rm=TRUE)
-    
-    ggplot(data = df_life)+
-      geom_jitter(mapping = aes(x = year, y = expectlife, col="Expect Life"))+
-      geom_jitter(mapping = aes(x = year, y = gdp * scaleFactor, col = "GDP"))+
-      ggtitle((as.character(country)))+
+      g <- gdp_c[gdp_c[['geo']] == geo,]
+      g <- g[,3:length(g)]
       
-      scale_y_continuous(
-        
-        # Features of the first axis
-        name = "Average Life Expectancy",
-        
-        # Add a second axis and specify its features
-        sec.axis=sec_axis(~./scaleFactor, name="GDP")
-      )
-    
-  } else{
-    print('No such country found in GDP record')
-  }
-  
+      # drop unused information
+      life <- expectancy[,5:length(expectancy)]   
+      # Add GDP values of each year to the same dataframe
+      life[2,] <- NA
+        for (i in 1:length(g)){
+          life[2,as.character(colnames(g)[i])] <- g[,i]  
+        }
+      # Add year as a row  
+      life<- rbind(life, as.numeric(colnames(life)))
+      # Transpose dataframe
+      life <- t(life)
+      # Setup column names
+      colnames(life) <- c('expectlife','gdp','year')
+      df_life <- data.frame(life)
+      
+      # Setup scale factor for multiple lines plotting shown in the same plot
+      scaleFactor <- max(df_life$expectlife) / max(df_life$gdp, na.rm=TRUE)
+      
+      # ggplot  
+        mainplot <- ggplot(data = df_life)+
+          geom_jitter(mapping = aes(x = year, y = expectlife, col="Expect Life"))+
+          geom_jitter(mapping = aes(x = year, y = gdp * scaleFactor, col = "GDP"))+
+          ggtitle((as.character(country)))+
+          
+          scale_y_continuous(
+            # Features of the first axis
+            name = "Average Life Expectancy",
+            # Add a second axis and specify its features
+            sec.axis=sec_axis(~./scaleFactor, name="GDP")
+          )
+        suppressWarnings(print(mainplot))
+    } else{
+      print('No such country found in GDP record')
+    }
   
 }
