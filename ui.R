@@ -2,6 +2,8 @@ library(shinythemes)
 
 sidebar_panel_width = 3
 
+df <- read_excel(file.path(getwd(),"www/data/lex-by-gapminder.xlsx"), sheet = 2)  # Expected life of each country since 1800
+
 ui <- fluidPage(
   theme = shinytheme('spacelab'),
   navbarPage('Global Life Expectancy',
@@ -56,12 +58,14 @@ ui <- fluidPage(
                         mainPanel(plotOutput('map_plot'))
                       )
                     ),
-             tabPanel("Related Data",
+             tabPanel("Related Factor",
                       fluidPage(
                         sidebarPanel(
                           width = sidebar_panel_width,
-                          textInput("related_country", label = 'Country', value = "China"),
-                          dateRangeInput("related_dates", label = "Date range", start = '1990-01-01'),
+                          selectInput(inputId = 'Relation', label = 'Selecte related factor', choices = c('GDP','Earthquake'), selected = 'GDP'),
+                          selectInput(inputId = 'related_country', label = 'Select Country', choices = df[['geo.name']]),
+                          #textInput("related_country", label = 'Country', value = "China"),
+                          #dateRangeInput("related_dates", label = "Date range", start = '1990-01-01'),
                         ),
                         mainPanel(plotOutput('related_data_plot'))
                       )
