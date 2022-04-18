@@ -85,6 +85,11 @@ getMapPlot <- function(date,position){
 
 
 getRelatedDataPlot <- function(related_country,start_date,end_date){
+  return(relation_gdp(related_country))
+  
+}
+
+relation_gdp <- function(country) {
   print(paste(getwd()))
   df <- read_excel(file.path(getwd(),"www/data/lex-by-gapminder.xlsx"), sheet = 2)
   df_region <- read_excel(file.path(getwd(),"/www/data/lex-by-gapminder.xlsx"), sheet = 3)
@@ -95,14 +100,17 @@ getRelatedDataPlot <- function(related_country,start_date,end_date){
   
   earthquake <- read_csv(file.path(getwd(),"/www/data/earthquake_deaths_annual_number.csv"))
   
-  return(relation_gdp(df,related_country))
+  # replace character into numerics, 10K -- 10000
+  for (i in 2:length(colnames(earthquake))) {
+    if (sapply(earthquake,class)[i] == 'character'){
+      print(colnames(earthquake)[i])
+      earthquake[[colnames(earthquake)[i]]] <- as.numeric(sub('k','e3',earthquake[[colnames(earthquake)[i]]]))
+    }
+    0}
   
-  #print(paste('Running getRelatedDataPlot! start_date=',start_date,'end_date=',end_date,'related_country=',related_country))
-  #return(ggplot(iris)+geom_bar(aes(x = Species)))
-}
-
-
-relation_gdp <- function(df,country) {
+  
+  gdp_c <- gdp[!is.na(gdp[["Country Name"]]),]
+  
   expectancy <- df[df[["geo.name"]] == country,]
   geo <- expectancy$geo 
   life <- expectancy[,5:length(expectancy)]
