@@ -21,7 +21,7 @@ getWrodCloudPlot <- function(year){
   word<-na.omit(df) 
   a<-data.frame(country = word$geo.name,
                 freq = word[ , c(year)])
-  return(wordcloud(a$country,a$freq,min.freq = 10,scale=c(0.5,0.5)))
+  return(wordcloud(a$country,a$freq,min.freq = 10,scale=c(0.5,0.5),colors = colors()))
 }
 
 
