@@ -1,3 +1,9 @@
+library(maps)
+library(ggplot2)
+library(tidyverse)
+library(readxl)
+library(dplyr)
+
 
 library(readr)
 library(stringr)
@@ -35,9 +41,49 @@ getRankPlot <- function(top_year,top_rank){
 
 #position=[Global,Europe,Asia,North America,South America,Africa,Australia]
 getMapPlot <- function(date,position){
-  print(paste('Running getMapPlot!','date=',date,'position=',position))
-  return(ggplot(iris)+geom_bar(aes(x = Species)))
+  df <- read_excel('www/data/lex-by-gapminder.xlsx', sheet = 2)
+  map <- map_data('world')
+  map_continent <- read.csv('www/data/gapminder.csv')
+  map_continent <- unique(subset(map_continent, select=c(country,continent)))
+  colnames(map)[5] <- "country"
+  map <- filter(map,map$country != 'French Southern and Antarctic Lands')
+  map$country[which(map$country=='South Sudan')] <- 'Sudan'
+  map$country[which(map$country=='USA')] <- 'United States'
+  map$country[which(map$country=='Democratic Republic of the Congo')] <- 'Congo, Dem. Rep.'
+  map$country[which(map$country=='Republic of Congo')] <- 'Congo, Rep.'
+  map_full <- left_join(map,map_continent,by = c('country'))
+  colnames(df)[1] <- "country"
+  life_map <- right_join(df,map_full,by = c("country"))
+  
+  
+  plain <- theme(
+    axis.text = element_blank(),
+    axis.line = element_blank(),
+    axis.ticks = element_blank(),
+    panel.border = element_blank(),
+    panel.grid = element_blank(),
+    axis.title = element_blank(),
+    panel.background = element_rect(fill = "transparent"),
+    plot.background = element_rect(fill = "transparent"),
+    plot.title = element_text(hjust = 0.5)
+  )
+  return(plot(position,date))
+  
 }
+# 绘制地图
+plot <- function(area, colN){
+  if (area == 'Global'){
+    life_map <- life_map
+  }
+  else{
+    life_map <- filter(life_map,life_map$continent == area)}
+  ggplot(life_map,mapping = aes(x = long, y = lat,group = group,
+                                fill = unlist(life_map[colN])))+
+    geom_polygon(color = 'black') +
+    scale_fill_gradient(low = 'white', high = 'red')+
+    plain
+}
+
 
 
 getRelatedDataPlot <- function(related_country,start_date,end_date){
