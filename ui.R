@@ -3,7 +3,7 @@ library(shinythemes)
 sidebar_panel_width = 3
 
 ui <- fluidPage(
-  theme = shinytheme('sandstone'),
+  theme = shinytheme('spacelab'),
   navbarPage('Global Life Expectancy',
              tabPanel("Welcome",
                       fluidRow(
