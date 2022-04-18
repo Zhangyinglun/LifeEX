@@ -98,7 +98,8 @@ getMapPlot <- function(date,position){
   res_plot <- ggplot(life_map,mapping = aes(x = long, y = lat,group = group,
                                 fill = unlist(life_map[date])))+
     geom_polygon(color = 'gray') +
-    scale_fill_distiller(palette ="Spectral",na.value="white")+
+    scale_fill_distiller(palette ="Spectral",na.value="white",
+                         name = paste('Life Expectancy in',date))+
     plain
   
   return(res_plot)
