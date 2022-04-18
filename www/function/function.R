@@ -144,9 +144,11 @@ relation_gdp <- function(country) {
       
       # ggplot  
         mainplot <- ggplot(data = df_life)+
-          geom_jitter(mapping = aes(x = year, y = expectlife, col="Expect Life"))+
-          geom_jitter(mapping = aes(x = year, y = gdp * scaleFactor, col = "GDP"))+
+          geom_point(mapping = aes(x = year, y = expectlife, col="Expect Life"))+
+          geom_point(mapping = aes(x = year, y = gdp * scaleFactor, col = "GDP"))+
           ggtitle((as.character(country)))+
+          theme_minimal()+
+          theme(panel.grid=element_blank(),panel.border=element_blank())+
           
           scale_y_continuous(
             # Features of the first axis
@@ -190,9 +192,11 @@ relation_earthquake <- function(country) {
     
     # ggplot 
     mainplot <- ggplot(data = df_life)+
-      geom_jitter(mapping = aes(x = year, y = expectlife, col="Expect Life"))+
-      geom_jitter(mapping = aes(x = year, y = earthquake_death * scaleFactor, col = "Earthquake Death"))+
+      geom_point(mapping = aes(x = year, y = expectlife, col="Expect Life"))+
+      geom_point(mapping = aes(x = year, y = earthquake_death * scaleFactor, col = "Earthquake Death"))+
       ggtitle((as.character(country)))+
+      theme_minimal()+
+      theme(panel.grid=element_blank(),panel.border=element_blank())+
       
       scale_y_continuous(
         # Features of the first axis

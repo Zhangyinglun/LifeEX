@@ -64,14 +64,14 @@ ui <- fluidPage(
                       fluidPage(
                         sidebarPanel(
                           width = sidebar_panel_width,
-                          selectInput(inputId = 'Relation', label = 'Selecte related factor', choices = c('GDP','Earthquake')),
+                          selectInput(inputId = 'Relation', label = 'Selecte related factor', choices = c('GDP Per Capita','Earthquake')),
                           
                           conditionalPanel(
                             condition = "input.Relation == 'Earthquake'",
                             selectInput(inputId = 'related_country1', label = 'Select Country', choice = earthquake[['country']])),
                           
                           conditionalPanel(
-                            condition = "input.Relation == 'GDP'",
+                            condition = "input.Relation == 'GDP Per Capita'",
                             selectInput(inputId = 'related_country2', label = 'Select Country', choice = gdp[['Country Name']] )),
                           
                           
