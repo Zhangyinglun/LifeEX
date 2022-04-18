@@ -35,7 +35,8 @@ getRankPlot <- function(top_year,top_rank){
   word2<-data.frame(co = word1$country,
                     population = word1$freq)
   word2$co <- factor(word2$co,levels=word2$co)
-  p <- ggplot(word2[1:top_rank,],aes(x=co,y=population))
+  print(palette())
+  p <- ggplot(word2[1:top_rank,],aes(x=co,y=population,fill =colors()[1:top_rank]))
   p+geom_bar(stat = 'identity')+theme(axis.text.x = element_text(angle = 30, hjust = 1))+coord_flip()
 }
 
