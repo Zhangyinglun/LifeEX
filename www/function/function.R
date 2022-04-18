@@ -97,8 +97,8 @@ getMapPlot <- function(date,position){
   
   res_plot <- ggplot(life_map,mapping = aes(x = long, y = lat,group = group,
                                 fill = unlist(life_map[date])))+
-    geom_polygon(color = 'black') +
-    scale_fill_gradient(low = 'white', high = 'red')+
+    geom_polygon(color = 'gray') +
+    scale_fill_distiller(palette ="Spectral",na.value="white")+
     plain
   
   return(res_plot)
