@@ -47,11 +47,11 @@ getRankPlot <- function(top_year,top_rank){
   a<-data.frame(country = word$geo.name,
                 freq = word[ , c(top_year)])
   word1<-a[order(a$freq,decreasing = T),]
-  word2<-data.frame(co = word1$country,
+  word2<-data.frame(Countries = word1$country,
                     population = word1$freq)
-  word2$co <- factor(word2$co,levels=word2$co)
+  word2$Countrie <- factor(word2$Countries,levels=word2$Countries)
   print(word2[top_rank,]$population)
-  p <- ggplot(word2[1:top_rank,],aes(x=co,y=population,fill =population))
+  p <- ggplot(word2[1:top_rank,],aes(x=Countrie,y=population,fill =population))
   #+ylim (word2[top_rank+1,]$population, word2[1,]$population)
   #coord_cartesian(ylim = range(df$Y))
   #coord_cartesian(ylim = range(word2[1:top_rank,]$population))
