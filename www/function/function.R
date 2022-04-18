@@ -3,8 +3,6 @@ library(ggplot2)
 library(tidyverse)
 library(readxl)
 library(dplyr)
-
-
 library(readr)
 library(stringr)
 library(jiebaRD) 
@@ -14,8 +12,8 @@ library(wordcloud2)
 
 df1.path <- file.path("www/data/LifeExpectancy.csv")
 df.path <- file.path("www/data/LifeExpectancy.xlsx")
-
 df1 <- read.csv(df1.path)
+
 # Read raw data
 df <- read_excel(file.path(getwd(),"www/data/lex-by-gapminder.xlsx"), sheet = 2)  # Expected life of each country since 1800
 df_region <- read_excel(file.path(getwd(),"/www/data/lex-by-gapminder.xlsx"), sheet = 3)  # Expected life of each region since 1800
@@ -24,14 +22,14 @@ gdp <- read_excel(file.path(getwd(),"/www/data/GM-GDP per capita - Dataset - v27
 earthquake <- read_csv(file.path(getwd(),"/www/data/earthquake_deaths_annual_number.csv")) # Earthquake death of each country since 1800
 
 # Data Cleaning
-# replace character into numerics, 10K -- 10000
-for (i in 2:length(colnames(earthquake))) {
-  if (sapply(earthquake,class)[i] == 'character'){
-    earthquake[[colnames(earthquake)[i]]] <- as.numeric(sub('k','e3',earthquake[[colnames(earthquake)[i]]]))
-  }
-  0}
-# delete rows with blank country name
-gdp_c <- gdp[!is.na(gdp[["Country Name"]]),]
+  # replace character into numerics, 10K -- 10000
+  for (i in 2:length(colnames(earthquake))) {
+    if (sapply(earthquake,class)[i] == 'character'){
+      earthquake[[colnames(earthquake)[i]]] <- as.numeric(sub('k','e3',earthquake[[colnames(earthquake)[i]]]))
+    }
+    0}
+  # delete rows with blank country name
+  gdp_c <- gdp[!is.na(gdp[["Country Name"]]),]
 
 
 getWrodCloudPlot <- function(year){
@@ -100,13 +98,15 @@ getMapPlot <- function(date,position){
 }
 
 
-getRelatedDataPlot <- function(related_country,start_date,end_date){
-  return(relation_gdp(related_country))
-  
+getRelatedDataPlot <- function(related_country,factor){
+  if (factor == 'GDP') {
+    return(relation_gdp(related_country))
+  } else{
+    return(relation_gdp(related_country))
+  }
 }
 
 relation_gdp <- function(country) {
-  
   # connect df and gdp
   expectancy <- df[df[["geo.name"]] == country,]   # Pick the country
   geo <- expectancy$geo 
@@ -130,7 +130,7 @@ relation_gdp <- function(country) {
       df_life <- data.frame(life)
       
       # Setup scale factor for multiple lines plotting shown in the same plot
-      scaleFactor <- max(df_life$expectlife) / max(df_life$gdp, na.rm=TRUE)
+      scaleFactor <- max(df_life$expectlife,na.rm=TRUE) / max(df_life$gdp, na.rm=TRUE)
       
       # ggplot  
         mainplot <- ggplot(data = df_life)+
@@ -148,5 +148,49 @@ relation_gdp <- function(country) {
     } else{
       print('No such country found in GDP record')
     }
+  
+}
+
+
+relation_earthquake <- function(df,country) {
+  # connect df and earthquake
+  expectancy <- df[df[["geo.name"]] == country,]
+  geo <- expectancy$geo.name
+  life <- expectancy[,5:length(expectancy)]
+  life[2,] <- NA
+  
+  if (any(grepl(geo, earthquake$country))) {
+    e <- earthquake[earthquake[['country']] == geo,]
+    e <- e[,2:length(e)]
+    
+    for (i in 1:length(e)){
+      life[2,as.character(colnames(e)[i])] <- e[,i]
+    }
+    
+    life<- rbind(life, as.numeric(colnames(life)))
+    life <- t(life)
+    colnames(life) <- c('expectlife','earthquake_death','year')
+    
+    df_life <- data.frame(life)
+    
+    scaleFactor <- max(df_life$expectlife, na.rm=TRUE) / max(df_life$earthquake_death, na.rm=TRUE)
+    
+    ggplot(data = df_life)+
+      geom_jitter(mapping = aes(x = year, y = expectlife, col="Expect Life"))+
+      geom_jitter(mapping = aes(x = year, y = earthquake_death * scaleFactor, col = "Earthquake Death"))+
+      ggtitle((as.character(country)))+
+      
+      scale_y_continuous(
+        
+        # Features of the first axis
+        name = "Average Life Expectancy",
+        
+        # Add a second axis and specify its features
+        sec.axis=sec_axis(~./scaleFactor, name="Earthquake")
+      )
+    
+  } else{
+    print('No such country found in earthquake record')
+  }
   
 }
