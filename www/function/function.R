@@ -1,13 +1,11 @@
-# csv地址
+
 library(readr)
 library(stringr)
 df1.path <- file.path("www/data/LifeExpectancy.csv")
-# xlsx地址
+
 df.path <- file.path("www/data/LifeExpectancy.xlsx")
 
 
-#词云写入该方法，返回图片
-#year：词云使用的年份，默�?2022
 library(jiebaRD) 
 library(jiebaR)
 library(wordcloud)
@@ -20,8 +18,7 @@ getWrodCloudPlot <- function(year){
   return(wordcloud(a$country,a$freq,min.freq = 10,scale=c(0.5,0.5)))
 }
 
-#寿命前top_rank位国家写入该方法，返回图�?
-#top_rank：取1~top_rank 数量的国�?
+
 getRankPlot <- function(top_year,top_rank){
   word<-na.omit(df) 
   top_year<-str_c("X",top_year)
@@ -35,17 +32,14 @@ getRankPlot <- function(top_year,top_rank){
   p+geom_bar(stat = 'identity')+theme(axis.text.x = element_text(angle = 30, hjust = 1))+coord_flip()
 }
 
-#绘制地图写入该方法，返回图片
-#date：数据时�?
-#position：展示的位置,可能传入如下字符�? [Global,Europe,Asia,North America,South America,Africa,Australia]
+
+#position=[Global,Europe,Asia,North America,South America,Africa,Australia]
 getMapPlot <- function(date,position){
   print(paste('Running getMapPlot!','date=',date,'position=',position))
   return(ggplot(iris)+geom_bar(aes(x = Species)))
 }
 
-#绘制折线图写入该方法，返回图�?
-#start_date：数据起始时�?
-#end_date：数据结束时�?
+
 getRelatedDataPlot <- function(related_country,start_date,end_date){
   print(paste(getwd()))
   df <- read_excel(file.path(getwd(),"www/data/lex-by-gapminder.xlsx"), sheet = 2)
