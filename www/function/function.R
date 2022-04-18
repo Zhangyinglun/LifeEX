@@ -20,8 +20,9 @@ df <- read.csv(df1.path)
 getWrodCloudPlot <- function(year){
   word<-na.omit(df) 
   a<-data.frame(country = word$geo.name,
-                freq = word[ , c(year)])
-  return(wordcloud(a$country,a$freq,min.freq = 10,scale=c(0.5,0.5),colors = colors()))
+                freq = (word[ , c(year)]^3))
+  par(pin = c(5.5,5.5))
+  return(wordcloud(a$country,a$freq,min.freq = 214599,scale=c(1,0.1),colors = a$freq))
 }
 
 
