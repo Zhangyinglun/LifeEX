@@ -49,10 +49,8 @@ ui <- fluidPage(
                                       choices = list("Global" = "Global", 
                                                      "Europe" = "Europe", 
                                                      "Asia" = "Asia",
-                                                     "North America" = "North America",
-                                                     "South America" = "South America",
-                                                     'Africa' = 'Africa',
-                                                     'Australia' = 'Australia'), 
+                                                     "America" = "Americas",
+                                                     'Africa' = 'Africa'), 
                                     selected = 'Global')
                       ),
                         mainPanel(plotOutput('map_plot'))

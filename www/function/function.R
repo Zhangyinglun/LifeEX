@@ -67,23 +67,20 @@ getMapPlot <- function(date,position){
     plot.background = element_rect(fill = "transparent"),
     plot.title = element_text(hjust = 0.5)
   )
-  return(plot(position,date))
   
-}
-# 绘制地图
-plot <- function(area, colN){
-  if (area == 'Global'){
-    life_map <- life_map
+  if (position != 'Global'){
+    life_map <- filter(life_map,life_map$continent == position)
   }
-  else{
-    life_map <- filter(life_map,life_map$continent == area)}
-  ggplot(life_map,mapping = aes(x = long, y = lat,group = group,
-                                fill = unlist(life_map[colN])))+
+  
+  res_plot <- ggplot(life_map,mapping = aes(x = long, y = lat,group = group,
+                                fill = unlist(life_map[date])))+
     geom_polygon(color = 'black') +
     scale_fill_gradient(low = 'white', high = 'red')+
     plain
+  
+  return(res_plot)
+  
 }
-
 
 
 getRelatedDataPlot <- function(related_country,start_date,end_date){
