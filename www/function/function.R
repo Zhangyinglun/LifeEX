@@ -101,8 +101,9 @@ getMapPlot <- function(date,position){
 getRelatedDataPlot <- function(related_country,factor){
   if (factor == 'GDP') {
     return(relation_gdp(related_country))
-  } else{
-    return(relation_gdp(related_country))
+  } 
+  if (factor == 'Earthquake') {
+    return(relation_earthquake(related_country))
   }
 }
 
@@ -152,43 +153,45 @@ relation_gdp <- function(country) {
 }
 
 
-relation_earthquake <- function(df,country) {
+relation_earthquake <- function(country) {
   # connect df and earthquake
   expectancy <- df[df[["geo.name"]] == country,]
   geo <- expectancy$geo.name
-  life <- expectancy[,5:length(expectancy)]
-  life[2,] <- NA
-  
   if (any(grepl(geo, earthquake$country))) {
     e <- earthquake[earthquake[['country']] == geo,]
     e <- e[,2:length(e)]
     
+    # drop unused information
+    life <- expectancy[,5:length(expectancy)]
+    # Add earthquake death of each year to the same dataframe
+    life[2,] <- NA
     for (i in 1:length(e)){
-      life[2,as.character(colnames(e)[i])] <- e[,i]
+      life[2,as.character(colnames(e)[i])] <- as.numeric(e[,i])
     }
-    
+    # Add year as a row  
     life<- rbind(life, as.numeric(colnames(life)))
+    # Transpose dataframe
     life <- t(life)
+    # Setup column names
     colnames(life) <- c('expectlife','earthquake_death','year')
-    
     df_life <- data.frame(life)
     
+    # Setup scale factor for multiple lines plotting shown in the same plot
     scaleFactor <- max(df_life$expectlife, na.rm=TRUE) / max(df_life$earthquake_death, na.rm=TRUE)
     
-    ggplot(data = df_life)+
+    # ggplot 
+    mainplot <- ggplot(data = df_life)+
       geom_jitter(mapping = aes(x = year, y = expectlife, col="Expect Life"))+
       geom_jitter(mapping = aes(x = year, y = earthquake_death * scaleFactor, col = "Earthquake Death"))+
       ggtitle((as.character(country)))+
       
       scale_y_continuous(
-        
         # Features of the first axis
         name = "Average Life Expectancy",
-        
         # Add a second axis and specify its features
         sec.axis=sec_axis(~./scaleFactor, name="Earthquake")
       )
-    
+    suppressWarnings(print(mainplot))
   } else{
     print('No such country found in earthquake record')
   }
