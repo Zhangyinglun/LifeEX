@@ -51,7 +51,7 @@ getRankPlot <- function(top_year,top_rank){
                     Life_Expectancy = word1$freq)
   word2$Countrie <- factor(word2$Country,levels=word2$Country)
   print(word2[top_rank,]$Life_Expectancy)
-  p <- ggplot(word2[1:top_rank,],aes(x=Countrie,y=Life_Expectancy,fill =Life_Expectancy))
+  p <- ggplot(word2[1:top_rank,],aes(x=Country,y=Life_Expectancy,fill =Life_Expectancy))
   #+ylim (word2[top_rank+1,]$population, word2[1,]$population)
   #coord_cartesian(ylim = range(df$Y))
   #coord_cartesian(ylim = range(word2[1:top_rank,]$population))
