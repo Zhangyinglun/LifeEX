@@ -1,0 +1,7 @@
+library(shiny)
+library(dplyr)
+library(ggplot2)
+#df.path <- file.path("www/data/LifeExpectancy.csv")
+#df_csv <- read.csv(df.path)
+function.path <- file.path("www/function/function.R")
+source(function.path)
