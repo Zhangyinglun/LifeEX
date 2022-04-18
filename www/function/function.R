@@ -19,8 +19,7 @@ getRankPlot <- function(top_year,top_rank){
 }
 
 #绘制地图写入该方法，返回图片
-#start_date：数据起始时间
-#end_date：数据结束时间
+#date：数据时间
 #position：展示的位置,可能传入如下字符串 [Global,Europe,Asia,North America,South America,Africa,Australia]
 getMapPlot <- function(date,position){
   print(paste('Running getMapPlot!','date=',date,'position=',position))
