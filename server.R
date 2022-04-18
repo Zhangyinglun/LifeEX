@@ -5,7 +5,7 @@ server <- function(input, output) {
     output$map_plot <- renderPlot(getMapPlot(input$map_dates,input$map_position))
     #output$related_data_plot <- renderPlot(getRelatedDataPlot(input$related_country,input$Relation))
     output$related_data_plot <- renderPlot({
-      if (input$Relation == "GDP") {
+      if (input$Relation == "GDP Per Capita") {
       getRelatedDataPlot(input$related_country2, 'GDP')
     } else {
       getRelatedDataPlot(input$related_country1,'Earthquake')
