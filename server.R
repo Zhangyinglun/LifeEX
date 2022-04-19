@@ -23,5 +23,8 @@ server <- function(input, output) {
   output$img2 <- renderUI({
     tags$img(src = "https://www.gannett-cdn.com/-mm-/4e57f417ab56d8147a59ed2deb8f3a4b0b446da3/c=0-108-2120-1306/local/-/media/2015/11/14/USATODAY/USATODAY/635830845228241795-ThinkstockPhotos-166142142.jpg?width=660&height=373&fit=crop&format=pjpg&auto=webp", width = 300, height = 150)
   })
+  output$img3 <- renderUI({
+    tags$img(src = "https://thumbor.forbes.com/thumbor/fit-in/x/https://www.forbes.com/advisor/in/wp-content/uploads/2021/07/rupee-4395554_1280-e1626070973451.jpg", width = 300, height = 150)
+  })
 
 }

@@ -76,12 +76,13 @@ ui <- fluidPage(
                       )
                     ),
              tabPanel("GDP vs Expected Life - Global",
-                      fluidPage(
-                        sidebarPanel(
+                      fluidRow(
+                        column(
                           width = sidebar_panel_width,
                           selectInput(inputId = 'time', label = 'Selecte related factor', choices = colnames(gdp_c)[3:length(colnames(gdp_c))]),
                         ),
-                        mainPanel(plotOutput('year_plot'))
+                        column(9,plotOutput('year_plot')),
+                        column(12,uiOutput("img3", align = 'left')),
                       )
              )
   )
