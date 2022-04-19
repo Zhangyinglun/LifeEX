@@ -202,7 +202,7 @@ relation_gdpbytime <- function(time) {
   mergedData <- merge(df1, df2, by.x=c('geo.name'), by.y=c('Country Name'))
   
   mainplot <- ggplot(data = mergedData)+
-    geom_point(mapping = aes(x = GDP, y = Life))+
+    geom_point(mapping = aes(x = GDP, y = Life),color = "#53A891")+
     ggtitle(paste('Global GDP and Life Expectancy in ',as.character(time), 'of each country'))+
     ylab('Life Expectancy') +
     theme_minimal()
