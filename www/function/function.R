@@ -130,7 +130,7 @@ relation_gdp <- function(country) {
           geom_point(mapping = aes(x = year, y = gdp * scaleFactor, col = "GDP"))+
           ggtitle((as.character(country)))+
           theme_minimal()+
-          theme(panel.grid=element_blank(),panel.border=element_blank())+
+          #theme(panel.grid=element_blank(),panel.border=element_blank())+
           
           scale_y_continuous(
             # Features of the first axis
@@ -178,7 +178,7 @@ relation_earthquake <- function(country) {
       geom_point(mapping = aes(x = year, y = earthquake_death * scaleFactor, col = "Earthquake Death"))+
       ggtitle((as.character(country)))+
       theme_minimal()+
-      theme(panel.grid=element_blank(),panel.border=element_blank())+
+      #theme(panel.grid=element_blank(),panel.border=element_blank())+
       
       scale_y_continuous(
         # Features of the first axis
