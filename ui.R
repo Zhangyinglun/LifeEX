@@ -79,7 +79,7 @@ ui <- fluidPage(
                       fluidRow(
                         column(
                           width = sidebar_panel_width,
-                          selectInput(inputId = 'time', label = 'Selecte related factor', choices = colnames(gdp_c)[3:length(colnames(gdp_c))]),
+                          selectInput(inputId = 'time', label = 'Selecte Year', choices = colnames(gdp_c)[3:length(colnames(gdp_c))]),
                         ),
                         column(9,plotOutput('year_plot')),
                         column(12,uiOutput("img3", align = 'left')),
