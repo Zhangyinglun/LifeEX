@@ -11,6 +11,7 @@ server <- function(input, output) {
       getRelatedDataPlot(input$related_country1,'Earthquake')
     }
     })
+    output$year_plot <- renderPlot(relation_gdpbytime(input$time))
   })
   
   output$img <- renderUI({
