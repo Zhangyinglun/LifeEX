@@ -16,8 +16,8 @@ ui <- fluidPage(
                         )
                       ),
              tabPanel("Top Countries",
-                      fluidPage(
-                        sidebarPanel(
+                      fluidRow(
+                        column(
                           width = sidebar_panel_width,
                           'Please selet',
                           sliderInput('top_rank', 
@@ -30,16 +30,15 @@ ui <- fluidPage(
                             label = "Select year:", 
                             choices = 1800:2100,
                             selected = 2022
-                          )
+                          ),
+                          uiOutput("img", align = 'left')
                         ),
-                        mainPanel(
-                          plotOutput('top_plot')
-                        )
+                        column(9, plotOutput('top_plot'))
                       )
                     ),
              tabPanel("Global View",
-                      fluidPage(
-                        sidebarPanel(
+                      fluidRow(
+                        column(
                           width = sidebar_panel_width,
                           'Please selet',
                           selectInput(
@@ -57,12 +56,13 @@ ui <- fluidPage(
                                                      'Africa' = 'Africa'), 
                                     selected = 'Global')
                       ),
-                        mainPanel(plotOutput('map_plot'))
-                      )
+                      column(9,plotOutput('map_plot')),
+                      column(3,uiOutput("img1", align = 'left'))
+                    )
                     ),
              tabPanel("Related Factor",
-                      fluidPage(
-                        sidebarPanel(
+                      fluidRow(
+                        column(
                           width = sidebar_panel_width,
                           selectInput(inputId = 'Relation', label = 'Selecte related factor', choices = c('GDP Per Capita','Earthquake')),
                           
@@ -72,15 +72,11 @@ ui <- fluidPage(
                           
                           conditionalPanel(
                             condition = "input.Relation == 'GDP Per Capita'",
-                            selectInput(inputId = 'related_country2', label = 'Select Country', choice = gdp[['Country Name']] )),
-                          
-                          
+                            selectInput(inputId = 'related_country2', label = 'Select Country', choice = gdp[['Country Name']] ))
                             
-                          #selectInput(inputId = 'related_country', label = 'Select Country', choices = df[['geo.name']]),
-                          #textInput("related_country", label = 'Country', value = "China"),
-                          #dateRangeInput("related_dates", label = "Date range", start = '1990-01-01'),
                         ),
-                        mainPanel(plotOutput('related_data_plot'))
+                        column(9,plotOutput('related_data_plot')),
+                        column(12,uiOutput("img2", align = 'left')),
                       )
                     )
   )
